@@ -63,7 +63,7 @@ class Minitest::VendoredPathExpander
     }.flatten.sort.map { |s| _normalize s }
   end
 
-  def _normalize(f) = Pathname.new(f).cleanpath.to_s # :nodoc:
+  def _normalize(f) = Pathname.new(f).cleanpath.to_s.delete_prefix("#{Dir.pwd}/") # :nodoc:
 
   ##
   # Process a file into more arguments. Override this to add
