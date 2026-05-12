@@ -24,6 +24,34 @@ module Minitest
     # :startdoc:
 
     ##
+    # Declare the current class an abstract test case that doesn't run
+    # tests except in subclasses.
+    #
+    # Example:
+    #
+    #    class AbstractTestCase < Minitest::Test
+    #      abstract_test_case!
+    #
+    #      attr_accessor :obj
+    #
+    #      def test_method
+    #        assert_equal 42, obj.method
+    #      end
+    #    end
+    #
+    #    class TestConcrete < AbstractTestCase
+    #      def setup = self.obj = Concrete.new
+    #    end
+
+    def self.abstract_test_case! klass = self
+      extend Module.new {
+        define_method :run do |*args|
+          super(*args) unless self == klass
+        end
+      }
+    end
+
+    ##
     # Call this at the top of your tests when you absolutely
     # positively need to have ordered tests. In doing so, you're
     # admitting that you suck and your tests are weak.

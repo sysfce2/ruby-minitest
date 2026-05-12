@@ -115,6 +115,30 @@ class TestMinitestTest < MetaMetaMetaTestCase
     end
   end
 
+  def test_cls_abstract_test_case!
+    abs_test_class = Class.new FakeNamedTest do
+      abstract_test_case!
+
+      define_method :test_method do
+        assert true
+      end
+    end
+
+    @tus = [
+      abs_test_class,
+      Class.new(abs_test_class),
+      Class.new(abs_test_class),
+    ]
+
+    assert_report <<~EOM
+      ..
+
+      Finished in 0.00
+
+      2 runs, 2 assertions, 0 failures, 0 errors, 0 skips
+    EOM
+  end
+
   def test_passed_eh_teardown_good
     test_class = Class.new FakeNamedTest do
       def teardown; assert true; end
